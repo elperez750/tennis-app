@@ -3,7 +3,6 @@ import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 import Form from "./components/Form";
 import Footer from "./components/Footer";
-import Graph from "./components/Graph"; 
 
 function App() {
   return (
@@ -12,7 +11,6 @@ function App() {
       <Header />
       <Form />
 
-      <Graph />
       <Footer />  
       
     </div>

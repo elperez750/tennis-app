@@ -1,10 +1,19 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Graph from "./Graph"; 
+
 
 
 
 type DataResponse = {
     data: string;
+}
+
+type RegressionResponse = {
+  
+  'Y actual': number[]
+  'Y predicted': number[]
+  
 }
 
 
@@ -33,6 +42,8 @@ const features = [
 const Form = () => {
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [selectedOutcome, setSelectedOutcome] = useState<string>("");
+  const [yValues, setYValues] = useState<RegressionResponse>()
+  const [yPredictedValues, setYPredictedValues] = useState<RegressionResponse>()
 
   const handleChangeFeature = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
@@ -51,20 +62,35 @@ const Form = () => {
 
 
   const handleSubmit = async(event: React.FormEvent) => {
-    await axios.get("http://127.0.0.1:5000/api/data", {
-        params: {
-            features: selectedFeatures,
-            outcome: selectedOutcome,
-        }
-    })
-    .then((response: DataResponse) => {
-        console.log("Response:", response.data);
-    })
-
-
+    event.preventDefault();
 
     console.log("Form submitted");
-    event.preventDefault();
+    console.log("Selected Features:", selectedFeatures);
+    console.log("Selected Outcome:", selectedOutcome);
+    try{
+
+
+
+      await axios.get("http://127.0.0.1:5000/api/data", {
+          params: {
+              features: selectedFeatures,
+              outcome: selectedOutcome,
+          }
+      })
+      .then((response: DataResponse) => {
+          const yValues = response.data
+          setYValues(yValues['Y actual'])
+          setYPredictedValues(yValues['Y predicted'])
+          console.log("Response:", response.data);
+          
+      })
+    }
+    catch(error){
+      console.log("Error fetching data:", error)
+    }
+
+
+   
 
     
     console.log("Selected Features:", selectedFeatures);
@@ -84,7 +110,7 @@ const Form = () => {
   }, [selectedFeatures]);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8 bg-white rounded-xl shadow-lg mt-10">
+    <div className="max-w-4xl mx-auto p-6 space-y-8 bg-white rounded-xl shadow-lg mt-10 mb-10">
       <h1 className="text-3xl font-bold text-center text-green-700">
         Tennis Player Outcome Prediction
       </h1>
@@ -149,7 +175,15 @@ const Form = () => {
         className="inline-flex items-center justify-start px-4 py-2 text-md font-medium text-white bg-green-600 border border-transparent rounded-xl shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Predict Outcome</button>
 
       </form>
+
+
+      {yValues && yPredictedValues && <Graph />
+      }
+
     </div>
+
+
+
   );
 };
 
