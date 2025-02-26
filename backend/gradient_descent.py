@@ -52,7 +52,7 @@ def linear_regression(features, outcome, learning_rate=0.005, iterations=1000):
 
     y_pred = np.round(np.clip(y_pred, 0, None))
 
-    return y_pred, y
+    return y_pred, y, theta, b
 
 def calculate_y(X, theta, b):
     return np.dot(X, theta) + b

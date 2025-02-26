@@ -29,11 +29,24 @@ def get_data():
    
     
     
-    y_pred, y = linear_regression(features_df, output_df)
-    returned_dict = {"Y predicted": y_pred.flatten().tolist(), "Y actual": y.flatten().tolist()}
+    y_pred, y, theta, b = linear_regression(features_df, output_df)
+
+    all_y_values = []
+
+    theta_flatten = theta.flatten().tolist()
+
+    for i in range(len(y_pred)):
+        all_y_values.append(
+            {
+                "Y predicted":y_pred.flatten().tolist()[i],
+                "Y actual": y.flatten().tolist()[i]
+             
+             }
+        )
+
     
 
-    return jsonify(returned_dict)
+    return jsonify({"data": all_y_values, "theta": theta_flatten, "bias": b})
 
     
 
