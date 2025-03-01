@@ -7,8 +7,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  ReferenceLine,
-  Legend
+  Legend,
 } from "recharts";
 
 // Define the type for data points
@@ -18,75 +17,54 @@ type DataPoint = {
 };
 
 type GraphProps = {
-  data: DataPoint[]
-  theta: number[]
-  bias: number;
-}
+  data: DataPoint[];
+ 
+};
 
-const Graph: React.FC<GraphProps> = ({ data, theta, bias }) => {
-  // Debug
-
+const Graph: React.FC<GraphProps> = ({ data }) => {
   if (!data || data.length === 0) {
     return <div>No data available</div>;
   }
 
-
-  const xMin = Math.min(...data.map(d => d["Y actual"]))
-  const xMax = Math.max(...data.map(d => d["Y actual"]))
-
  
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ScatterChart
-        margin={{
-          top: 20,
-          right: 20,
-          bottom: 20,
-          left: 20,
-        }}
+        data={data}
+        margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        
-        <XAxis 
-          type="number" 
-          dataKey="Y actual" 
-          name="Actual Value" 
-          domain={['auto', 'auto']}
-          label={{ value: 'Actual Value', position: 'insideBottom', offset: -5 }}
-        />
-        
 
-        <YAxis 
-          type="number" 
-          dataKey="Y predicted" 
-          name="Predicted Value" 
-          domain={['auto', 'auto']}
-          label={{ value: 'Predicted Value', angle: -90, position: 'insideLeft' }}
+        <XAxis
+          type="number"
+          dataKey="Y actual"
+          name="Y actual"
+          domain={["auto", "auto"]}
+          label={{ value: "Actual Value", position: "insideBottom", offset: -5 }}
         />
-        
-        {/* Perfect prediction line (45-degree line) */}
-        <ReferenceLine 
-          stroke="red" 
-          strokeDasharray="3 3" 
-          segment={[
-            { x: 'dataMin', y: 'dataMin' },
-            { x: 'dataMax', y: 'dataMax' }
-          ]}
+
+        <YAxis
+          type="number"
+          dataKey="Y predicted"
+          name="Y predicted"
+          domain={["auto", "auto"]}
+          label={{ value: "Predicted Value", angle: -90, position: "insideLeft" }}
         />
-        
-        <Tooltip 
+
+        <Tooltip
+          cursor={{strokeDasharray: "3 3"}}
           formatter={(value: number) => new Intl.NumberFormat().format(value)}
           labelFormatter={(label) => `Value: ${new Intl.NumberFormat().format(label)}`}
         />
-        
+
         <Legend />
+
+        {/* Scatter plot for data points */}
+        <Scatter name="Data Points" data={data} fill="#8884d8" shape="circle" />
+
+        {/* Regression line */}
         
-        <Scatter 
-          name="Data Points" 
-          data={data} 
-          fill="#8884d8"
-          shape="circle"
-        />
       </ScatterChart>
     </ResponsiveContainer>
   );

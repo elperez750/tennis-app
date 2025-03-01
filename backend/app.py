@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 import numpy as np
-from gradient_descent import linear_regression
+#from gradient_descent_manual import linear_regression
+from gradient_descent_sklearn import linear_regression_sklearn
 from flask_cors import CORS
-
+import math
 
 app = Flask(__name__)
 CORS(app)
@@ -28,12 +29,18 @@ def get_data():
     
    
     
-    
-    y_pred, y, theta, b = linear_regression(features_df, output_df)
+    #y_pred, y, theta, b = linear_regression(features_df, output_df)
+    y_pred, y, b, theta, training_score, testing_score = linear_regression_sklearn(features_df, output_df)
+
+
+    training_score_rounded = math.floor(training_score * 100) / 100
+    testing_score_rounded = math.floor(testing_score * 100) / 100
+
 
     all_y_values = []
 
     theta_flatten = theta.flatten().tolist()
+    b_flatten = b.flatten().tolist()[0]
 
     for i in range(len(y_pred)):
         all_y_values.append(
@@ -45,10 +52,8 @@ def get_data():
         )
 
     
-
-    return jsonify({"data": all_y_values, "theta": theta_flatten, "bias": b})
-
     
+    return jsonify({"data": all_y_values, "theta": theta_flatten, "bias": b_flatten, "trainingScore": training_score_rounded, "testingScore": testing_score_rounded})
 
 
 
