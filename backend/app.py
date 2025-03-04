@@ -6,7 +6,7 @@ from gradient_descent_sklearn import linear_regression_sklearn
 from flask_cors import CORS
 import math
 
-app = Flask(__name__, static_folder="../frontend/dist", static_url_path="")
+app = Flask(__name__, static_folder="../frontend/dist", static_url_path="/")
 CORS(app)
 
 df = pd.read_csv('./tennis_stats.csv')
@@ -14,8 +14,7 @@ df = pd.read_csv('./tennis_stats.csv')
 
 @app.route('/')
 def home():
-    print(df.head())
-    return jsonify({"message": "Flask Backend Connected!"})
+    return app.send_static_file('index.html')
 
 
 
