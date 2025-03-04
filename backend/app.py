@@ -1,12 +1,12 @@
 from flask import Flask, request, jsonify
 import pandas as pd
-import numpy as np
+import os
 #from gradient_descent_manual import linear_regression
 from gradient_descent_sklearn import linear_regression_sklearn
 from flask_cors import CORS
 import math
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../frontend/dist", static_url_path="")
 CORS(app)
 
 df = pd.read_csv('./tennis_stats.csv')
