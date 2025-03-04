@@ -68,7 +68,7 @@ const Form = () => {
     setError(null);
 
     try {
-      const response = await axios.get("http://127.0.0.1:5000/api/data", {
+      const response = await axios.get("https://tennis-app-ajyj.onrender.com/api/data", {
         params: {
           features: selectedFeatures,
           outcome: selectedOutcome,
